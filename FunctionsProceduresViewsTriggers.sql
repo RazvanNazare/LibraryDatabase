@@ -60,6 +60,15 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE DeleteBook (@BookID INT, @BookName VARCHAR(50), @AuthorID INT, @PublisherID INT, @CategoryID INT)
+AS
+BEGIN
+	DELETE FROM Books WHERE @BookID = BookID;
+	INSERT INTO DeletedBooks (BookID, BookName, AuthorID, PublisherID, CategoryID)
+		VALUES (@BookID, @BookName, @AuthorID, @PublisherID, @CategoryID)
+END
+GO
+
 CREATE VIEW BooksDetails
 AS
 	SELECT B.BookName, A.AuthorName, P.PublisherName, C.CategoryName
@@ -81,8 +90,7 @@ BEGIN
 END
 GO
 
-CREATE TRIGGER updateBooks
-ON Books
+CREATE TRIGGER UpdateBooks ON Books
 FOR UPDATE
 AS
 BEGIN
@@ -92,7 +100,7 @@ BEGIN
 END
 GO
 
-CREATE TRIGGER DontDeleteCategories on Categories
+CREATE TRIGGER DontDeleteCategories ON Categories
 INSTEAD OF DELETE
 AS
 BEGIN
