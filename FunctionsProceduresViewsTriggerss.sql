@@ -60,12 +60,6 @@ BEGIN
 END
 GO
 
-/*
-EXEC AddComedyPoliromBook 11, 'Comedia Umana', 6, 1, 1;
-
-EXEC AddComedyPoliromBook 12, 'Fratii Karamazov', 1, 2, 3;
-*/
-
 CREATE VIEW BooksDetails
 AS
 	SELECT B.BookName, A.AuthorName, P.PublisherName, C.CategoryName
@@ -74,10 +68,6 @@ AS
 	INNER JOIN Publishers P on B.PublisherID = P.PublisherID
 	INNER JOIN Categories C on B.CategoryID = C.CategoryID
 GO
-
-/*
-SELECT * FROM BooksDetails
-*/
 
 CREATE TRIGGER AddAuthorName ON Authors
 FOR INSERT 
