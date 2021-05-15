@@ -78,3 +78,36 @@ GO
 /*
 SELECT * FROM BooksDetails
 */
+
+CREATE TRIGGER AddAuthorName ON Authors
+FOR INSERT 
+AS
+BEGIN
+	SELECT AuthorID, AuthorName
+	FROM Authors;
+	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
+		VALUES 
+			(GETDATE(), 'INSERT', 'AuthorName', @@ROWCOUNT)
+END
+GO
+
+CREATE TRIGGER updateBooks
+ON Books
+FOR UPDATE
+AS
+BEGIN
+	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
+	VALUES (GETDATE(), 'UPDATE', 'Libraries', @@ROWCOUNT)
+	SELECT * FROM Books
+END
+GO
+
+CREATE TRIGGER DontDeleteCategories on Categories
+INSTEAD OF DELETE
+AS
+BEGIN
+	PRINT 'You do not have the permission to delete a category.'
+	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
+	VALUES (GETDATE(), 'DELETE', 'Categories', @@ROWCOUNT)
+END
+GO
