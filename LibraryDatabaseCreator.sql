@@ -1,9 +1,5 @@
 CREATE DATABASE Library;
 
-/*
-USE Library; 
-*/
-
 CREATE TABLE Publishers
 (
 	PublisherID INT NOT NULL IDENTITY (1,1) PRIMARY KEY ,
@@ -66,6 +62,15 @@ CREATE TABLE HistoryLogs
 	OperationType VARCHAR(50),
 	AffectedTable VARCHAR(50),
 	AffectedRow INT,
+);
+
+CREATE TABLE DeletedBooks
+(
+	BookID INT,
+    BookName VARCHAR(50),
+	AuthorID INT,
+	PublisherID INT,
+	CategoryID INT,
 );
 
 INSERT INTO Publishers
@@ -133,3 +138,6 @@ INSERT INTO Books
 	('Romanul adolescentului miop', 1, 4, 14),
 	('Omul in cautarea sensului vietii', 12, 16, 14),
 	('Hronicul si cantecul varstelor', 9, 15, 14)
+
+
+
