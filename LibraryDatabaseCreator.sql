@@ -1,12 +1,7 @@
 CREATE DATABASE Library;
 
 /*
-USE Library;
-
-USE master ;  
-GO  
-DROP DATABASE Library;  
-GO  
+USE Library; 
 */
 
 CREATE TABLE Publishers
@@ -62,6 +57,15 @@ CREATE TABLE Libraries
 	CONSTRAINT FK_LibrariesBooks FOREIGN KEY (LibraryID)
     REFERENCES Library_Books (LibraryID)
 
+);
+
+CREATE TABLE HistoryLogs
+(
+	LogID INT IDENTITY(1,1) PRIMARY KEY,
+	DateAndTime DATETIME DEFAULT GETDATE(),
+	OperationType VARCHAR(50),
+	AffectedTable VARCHAR(50),
+	AffectedRow INT,
 );
 
 INSERT INTO Publishers
