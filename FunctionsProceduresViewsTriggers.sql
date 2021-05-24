@@ -60,15 +60,6 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE DeleteBook (@BookID INT, @BookName VARCHAR(50), @AuthorID INT, @PublisherID INT, @CategoryID INT)
-AS
-BEGIN
-	DELETE FROM Books WHERE @BookID = BookID;
-	INSERT INTO DeletedBooks (BookID, BookName, AuthorID, PublisherID, CategoryID)
-		VALUES (@BookID, @BookName, @AuthorID, @PublisherID, @CategoryID)
-END
-GO
-
 CREATE VIEW BooksDetails
 AS
 	SELECT B.BookName, A.AuthorName, P.PublisherName, C.CategoryName
@@ -78,34 +69,18 @@ AS
 	INNER JOIN Categories C on B.CategoryID = C.CategoryID
 GO
 
-CREATE TRIGGER AddAuthorName ON Authors
-FOR INSERT 
+CREATE VIEW LibraryBooksView
 AS
-BEGIN
-	SELECT AuthorID, AuthorName
-	FROM Authors;
-	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
-		VALUES 
-			(GETDATE(), 'INSERT', 'AuthorName', @@ROWCOUNT)
-END
+	SELECT L.LibraryName, B.BookName
+	FROM LibraryBooks LB
+	INNER JOIN Libraries L ON L.LibraryID = LB.LibraryID
+	INNER JOIN Books B ON B.BookID = LB.BookID
 GO
 
-CREATE TRIGGER UpdateBooks ON Books
-FOR UPDATE
+CREATE VIEW BooksInLibrariesView
 AS
-BEGIN
-	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
-	VALUES (GETDATE(), 'UPDATE', 'Libraries', @@ROWCOUNT)
-	SELECT * FROM Books
-END
-GO
-
-CREATE TRIGGER DontDeleteCategories ON Categories
-INSTEAD OF DELETE
-AS
-BEGIN
-	PRINT 'You do not have the permission to delete a category.'
-	INSERT INTO HistoryLogs(DateAndTime, OperationType, AffectedTable, AffectedRow)
-	VALUES (GETDATE(), 'DELETE', 'Categories', @@ROWCOUNT)
-END
+	SELECT B.BookName, L.LibraryName
+	FROM LibraryBooks LB
+	INNER JOIN Books B ON B.BookID = LB.BookID
+	INNER JOIN Libraries L ON L.LibraryID = LB.LibraryID
 GO
