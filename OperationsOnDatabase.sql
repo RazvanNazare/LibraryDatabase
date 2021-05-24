@@ -13,7 +13,7 @@ UPDATE Authors
 	WHERE AuthorID = 5 AND AuthorName = 'Goethe';
 
 DELETE FROM Publishers
-	WHERE PublisherID = 12;
+	WHERE PublisherID = 9;
 
 INSERT INTO Publishers
 	VALUES
@@ -34,7 +34,7 @@ SELECT AuthorID
 FROM Authors
 EXCEPT  
 SELECT AuthorID 
-FROM Books; 
+FROM Books;
 
 SELECT Books.Authorid, Books.BookName, Authors.AuthorName
 FROM Books
@@ -83,3 +83,11 @@ SELECT COUNT (BookID) BookID_By_PublisherID
 FROM Books
 GROUP BY PublisherID
 HAVING COUNT (BookID) < 4;
+
+SELECT Libraries.LibraryID, Libraries.LibraryName, Books.BookName
+FROM Libraries
+LEFT OUTER JOIN LibraryBooks 
+ON Libraries.LibraryID = LibraryBooks.LibraryID
+LEFT OUTER JOIN Books
+ON  LibraryBooks.BookID = Books.BookID
+
